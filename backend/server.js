@@ -24,8 +24,8 @@ async function fetchNumRestaurants(lat, lon, radius) {
         // extract number of restaurants from response
         const count = response.data.elements[0]?.tags?.total || 0;
 
-        // console log result
-        console.log(`Number of restaurants within ${radius}m: ${count}`);
+        // return result
+        return count;
     } catch (error) {
         // catch error
         console.error("Error fetching data from Overpass API:", error);
@@ -38,4 +38,4 @@ const longitude = -73.995819;
 const radius = 500; 
 
 // Fetch and display the number of restaurants
-fetchNumRestaurants(latitude, longitude, radius);
+console.log(await fetchNumRestaurants(latitude, longitude, radius));
