@@ -24,8 +24,16 @@ async function fetchNumRestaurants(lat, lon, radius) {
         // extract number of restaurants from response
         const count = response.data.elements[0]?.tags?.total || 0;
 
-        // return result
-        return count;
+        // if number of returned restaurants too high, reduce radius by 100m until
+        if (count > 100) {
+            const adjustedCount = fetchNumRestaurants(lat, lon, radius - 100);
+
+            // return result
+            return adjustedCount
+        } else {
+            // return result
+            return count;
+        }
     } catch (error) {
         // catch error
         console.error("Error fetching data from Overpass API:", error);
