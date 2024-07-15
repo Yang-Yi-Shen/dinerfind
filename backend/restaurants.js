@@ -26,38 +26,44 @@ async function fetchRestaurants(lat, lon, radius) {
     }
 }
 
-// test fetch from southern manhattan
-const userLatitude = 40.712670; 
-const userLongitude = -73.995819;
-const radius = 500; 
-
 // fetch and display restaurants in vicinity
-const restaurantData = await fetchRestaurants(userLatitude, userLongitude, radius);
+async function getRestaurantList(userLatitude, userLongitude, radius) {
+    const restaurantData = await fetchRestaurants(userLatitude, userLongitude, radius);
 
-let restaurantList = []
-for (const restaurant of restaurantData) {
-    // IMPORTANT: using geoJSON convention, meaning lon first then lat
-    const name = restaurant.tags.name;
-    const distance = haversine([restaurant.lon, restaurant.lat], [userLongitude, userLatitude]);
-    const cuisine = restaurant.tags.cuisine;
+    let restaurantList = []
+    for (const restaurant of restaurantData) {
+        // IMPORTANT: using geoJSON convention, meaning lon first then lat
+        const name = restaurant.tags.name;
+        const distance = haversine([restaurant.lon, restaurant.lat], [userLongitude, userLatitude]);
+        const cuisine = restaurant.tags.cuisine;
 
-    const addressObject = Object.fromEntries(
-        Object.entries(restaurant.tags).filter(([key]) => key.startsWith('addr:'))
-    );
-    let addressArray = [];
-    for (const key in addressObject) {
-        addressArray.push(addressObject[key]);
+        const addressObject = Object.fromEntries(
+            Object.entries(restaurant.tags).filter(([key]) => key.startsWith('addr:'))
+        );
+        let addressArray = [];
+        for (const key in addressObject) {
+            addressArray.push(addressObject[key]);
+        }
+        const address = addressArray.join(' ');
+
+        restaurantList.push({
+            name: name,
+            address: address,
+            distance: distance,
+            cuisine: cuisine
+        })
     }
-    const address = addressArray.join(' ');
 
-    restaurantList.push({
-        name: name,
-        address: address,
-        distance: distance,
-        cuisine: cuisine
-    })
+    restaurantList.sort((a, b) => a.distance - b.distance)
+    
+    return restaurantList;
 }
 
-restaurantList.sort((a, b) => a.distance - b.distance)
+// // test call using location in southern manhattan
+// const userLatitude = 40.712670;
+// const userLongitude = -73.995819;
+// const radius = 500;
 
-export default restaurantList;
+// const restaurantList = getRestaurantList(userLatitude, userLongitude, radius);
+
+export default getRestaurantList;
