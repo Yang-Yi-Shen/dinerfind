@@ -57,3 +57,5 @@ for (const restaurant of restaurantData) {
         cuisine: cuisine
     })
 }
+
+restaurantList.sort((a, b) => a.distance - b.distance)
