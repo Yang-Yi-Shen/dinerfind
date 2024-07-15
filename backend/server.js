@@ -1,49 +1,59 @@
 import axios from 'axios';
+import haversine from 'haversine-distance';
 
-async function fetchNumRestaurants(lat, lon, radius) {
-    // overpass API endpoint
-    const overpassUrl = "https://overpass-api.de/api/interpreter";
+// replace if switching API instance
+const overpassUrl = "https://overpass-api.de/api/interpreter";
 
-    // overpass QL query
+async function fetchRestaurants(lat, lon, radius) {
     const query = `
     [out:json];
     node
-      ["amenity"="restaurant"]
-      (around:${radius},${lat},${lon});
-    out count;
+        ["amenity"="restaurant"]
+        (around:${radius},${lat},${lon});
+    out body;
     `;
 
     try {
-        // request to overpass API
         const response = await axios.post(overpassUrl, query, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         });
 
-        // extract number of restaurants from response
-        const count = response.data.elements[0]?.tags?.total || 0;
-
-        // if number of returned restaurants too high, reduce radius by 100m until
-        if (count > 100) {
-            const adjustedCount = fetchNumRestaurants(lat, lon, radius - 100);
-
-            // return result
-            return adjustedCount
-        } else {
-            // return result
-            return count;
-        }
+        return response.data.elements;
     } catch (error) {
-        // catch error
         console.error("Error fetching data from Overpass API:", error);
     }
 }
 
 // test fetch from southern manhattan
-const latitude = 40.712670; 
-const longitude = -73.995819;
+const userLatitude = 40.712670; 
+const userLongitude = -73.995819;
 const radius = 500; 
 
-// Fetch and display the number of restaurants
-console.log(await fetchNumRestaurants(latitude, longitude, radius));
+// fetch and display restaurants in vicinity
+const restaurantData = await fetchRestaurants(userLatitude, userLongitude, radius);
+
+let restaurantList = []
+for (const restaurant of restaurantData) {
+    // IMPORTANT: using geoJSON convention, meaning lon first then lat
+    const name = restaurant.tags.name;
+    const distance = haversine([restaurant.lon, restaurant.lat], [userLongitude, userLatitude]);
+    const cuisine = restaurant.tags.cuisine;
+
+    const addressObject = Object.fromEntries(
+        Object.entries(restaurant.tags).filter(([key]) => key.startsWith('addr:'))
+    );
+    let addressArray = [];
+    for (const key in addressObject) {
+        addressArray.push(addressObject[key]);
+    }
+    const address = addressArray.join(' ');
+
+    restaurantList.push({
+        name: name,
+        address: address,
+        distance: distance,
+        cuisine: cuisine
+    })
+}
