@@ -1,8 +1,11 @@
 import express from "express";
+import cors from 'cors';
 import getRestaurantList from "./restaurants.js";
 
 const app = express();
 const PORT = 6900;
+
+app.use(cors());
 
 app.get('/getRestaurantList', async (req, res) => {
     const lat = req.query.lat;
