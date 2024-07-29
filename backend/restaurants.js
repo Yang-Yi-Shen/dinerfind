@@ -34,7 +34,7 @@ async function getRestaurantList(userLatitude, userLongitude, radius) {
     for (const restaurant of restaurantData) {
         // IMPORTANT: using geoJSON convention, meaning lon first then lat
         const name = restaurant.tags.name;
-        const distance = haversine([restaurant.lon, restaurant.lat], [userLongitude, userLatitude]);
+        const distance = Math.round(haversine([restaurant.lon, restaurant.lat], [userLongitude, userLatitude]));
         const cuisine = restaurant.tags.cuisine;
 
         const addressObject = Object.fromEntries(
