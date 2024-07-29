@@ -1,8 +1,11 @@
+import getLocation from "./getlocation.js";
+
 const url = "http://localhost:6900"
 
-// dummy data from southern manhattan
-const userLatitude = 40.712670;
-const userLongitude = -73.995819;
+// get user coordinates
+const userCoords = await getLocation()
+const userLatitude = userCoords.latitude;
+const userLongitude = userCoords.longitude;
 const radius = 500;
 
 const restaurantData = await fetch(`${url}/getRestaurantList?lat=${userLatitude}&lon=${userLongitude}&radius=${radius}`)
