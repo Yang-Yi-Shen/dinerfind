@@ -14,7 +14,7 @@ const restaurantListItems = restaurantData.map(restaurant =>
         <h2 class="restaurant-name text-lg font-bold">${restaurant.name}</h2>
         <p class="restaurant-address text-sm font-light text-slate-400">${restaurant.address}</p>
         <div class="restaurant-meta text-sm flex gap-2 mt-1">
-            <p class="restaurant-meta-item text-slate-50 border-none px-1 rounded-sm bg-slate-300">${restaurant.distance}</p>
+            <p class="restaurant-meta-item text-slate-50 border-none px-1 rounded-sm bg-slate-300">${restaurant.distance}m</p>
             <p class="restaurant-meta-item text-slate-50 border-none px-1 rounded-sm bg-slate-300">${restaurant.cuisine}</p>
         </div>
     </li>`).join('')
