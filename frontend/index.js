@@ -15,7 +15,7 @@ const restaurantListItems = restaurantData.map(restaurant =>
         <p class="restaurant-address text-sm font-light text-slate-400">${restaurant.address}</p>
         <div class="restaurant-meta text-sm flex gap-2 mt-1">
             <p class="restaurant-meta-item text-slate-50 border-none px-1 rounded-sm bg-slate-300">${restaurant.distance}m</p>
-            <p class="restaurant-meta-item text-slate-50 border-none px-1 rounded-sm bg-slate-300">${restaurant.cuisine}</p>
+            ${restaurant.cuisine !== undefined ? `<p class="restaurant-meta-item text-slate-50 border-none px-1 rounded-sm bg-slate-300">${restaurant.cuisine}</p>` : ''}
         </div>
     </li>`).join('')
 restaurantList.innerHTML = restaurantListItems
