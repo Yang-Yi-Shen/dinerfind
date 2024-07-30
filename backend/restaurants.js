@@ -36,7 +36,6 @@ async function getRestaurantList(userLatitude, userLongitude, radius) {
         const name = restaurant.tags.name;
         const distance = Math.round(haversine([restaurant.lon, restaurant.lat], [userLongitude, userLatitude]));
         const cuisine = restaurant.tags.cuisine;
-        const image = restaurant.tags.image;
 
         const addressObject = Object.fromEntries(
             Object.entries(restaurant.tags).filter(([key]) => key.startsWith('addr:'))
@@ -51,8 +50,7 @@ async function getRestaurantList(userLatitude, userLongitude, radius) {
             name: name,
             address: address,
             distance: distance,
-            cuisine: cuisine,
-            image: image
+            cuisine: cuisine
         })
     }
 
