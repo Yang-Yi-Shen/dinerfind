@@ -1,6 +1,6 @@
 import getLocation from "./getlocation.js";
 
-const url = "http://localhost:6900"
+const url = "https://dinerfind.vercel.app"
 
 // get user coordinates
 const userCoords = await getLocation()
